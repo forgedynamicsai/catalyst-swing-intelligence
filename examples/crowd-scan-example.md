@@ -62,9 +62,10 @@ and AI infrastructure demand is coherent and evidenced.
 - Catalyst timing: Next earnings cycle — management commentary on contract pipeline
   is the primary dated catalyst
 
-## Trade Fit Classification
+## Signal Fit Classification
 
-- Classification: watchlist
+- Classification: monitor
+  - `monitor` = signal is interesting but incomplete — crowding is increasing and some names have partially moved on the theme. Entry discipline analysis is required before deployment.
 - Why: Signal quality is moderate-to-high (68/100), mechanism is specific, but
   crowding is increasing and some names have partially moved on the theme.
   Entry discipline analysis (beaten-down check, entry zone, catalyst date) is
@@ -94,7 +95,7 @@ and AI infrastructure demand is coherent and evidenced.
    the user should buy anything.
 2. Signal trajectory (Accelerating) describes the crowd narrative lifecycle —
    not a price forecast.
-3. Trade Fit Classification (`watchlist`) is a signal-routing decision —
+3. Signal Fit Classification (`monitor`) is a signal-routing decision —
    not a buy recommendation.
 4. Separate entry, valuation, and thesis analysis is explicitly required before
    any capital decision.

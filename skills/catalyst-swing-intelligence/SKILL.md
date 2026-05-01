@@ -217,7 +217,7 @@ return, fair value, or any prediction about the underlying security.
 7. Apply priced-in filter.
 8. Map dissent — credible opposing views.
 9. Rank 1–3 cleanest expressions; explicitly reject loose baskets.
-10. Classify trade fit: `tradeable`, `watchlist`, or `reject`.
+10. Classify signal fit: `analysis-ready`, `monitor`, or `reject`.
 
 ### Catalyst taxonomy tags
 Rates · Inflation · Earnings · Regulation · Fiscal policy · Energy · AI infrastructure ·
@@ -254,9 +254,12 @@ Cyber · Resource nationalism · Critical minerals · Defense spending · Health
 - Multiple/risk-premium impact:
 - Catalyst timing:
 
-## Trade Fit Classification
+## Signal Fit Classification
 
-- Classification: [tradeable | watchlist | reject]
+- Classification: [analysis-ready | monitor | reject]
+  - `analysis-ready` = signal is sufficiently sourced and coherent to justify separate thesis, valuation, entry, and risk review. Not a buy/sell/hold recommendation.
+  - `monitor` = signal is interesting but incomplete, source-limited, too early, too crowded, or missing key evidence.
+  - `reject` = signal lacks sufficient independent evidence, specificity, mechanism, or source coverage, or is dominated by hype/echo-chamber risk.
 - Why:
 - What separate analysis is still required:
 - Not a buy/sell/hold recommendation.
@@ -653,7 +656,7 @@ Before delivering any output, verify:
 | Mode | Invoke when | Output artifact |
 |---|---|---|
 | `macro-first` | Before screening any names | Regime + portfolio instruction |
-| `crowd-scan` | Crowd signal, social sentiment | Signal block + tradeable expression |
+| `crowd-scan` | Crowd signal, social sentiment | Signal block + signal fit classification |
 | `thesis-build` | Building swing trade, entry zones | Full thesis with 12 required fields |
 | `concentration-check` | >30% in one position | Concentration review + trim rec |
 | `earnings-gate` | 1–5 days before earnings | Decision tree + post-call plan |

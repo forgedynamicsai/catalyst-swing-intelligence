@@ -33,7 +33,7 @@ Here's what the crowd is saying — and what the evidence actually supports 🧵
 Evidence quality: analyst notes + earnings transcripts + contract filings.
 Source independence: confirmed — multiple unrelated accounts citing same mechanism.
 Priced-in risk: partially priced.
-Trade fit: watchlist — requires entry and thesis analysis before any capital decision.
+Signal fit: monitor — requires entry and thesis analysis before any capital decision.
 
 Loose signals rejected: broad uranium baskets and unrelated power names
 without direct AI-load contract exposure.

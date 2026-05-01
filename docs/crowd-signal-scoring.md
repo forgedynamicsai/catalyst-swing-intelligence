@@ -114,14 +114,20 @@ These layers must not be collapsed into a single score.
 - Which sectors, industries, or broad instruments could be affected?
 - What catalyst timing matters?
 
-### Layer 3 — Trade Fit
+### Layer 3 — Signal Fit
 - Is there a dated catalyst?
 - Is the signal already priced in?
 - Is entry discipline applicable?
 - What would break the thesis?
-- Should this be `tradeable`, `watchlist`, or `reject`?
+- Should this be `analysis-ready`, `monitor`, or `reject`?
 
-`Trade Fit` classification is not a buy/sell/hold recommendation.
+| Classification | Meaning |
+|---|---|
+| `analysis-ready` | Signal is sufficiently sourced and coherent to justify separate thesis, valuation, entry, and risk review. Not a buy/sell/hold recommendation. |
+| `monitor` | Signal is interesting but incomplete, source-limited, too early, too crowded, or missing key evidence. |
+| `reject` | Signal lacks sufficient independent evidence, specificity, mechanism, or source coverage, or is dominated by hype/echo-chamber risk. |
+
+`Signal Fit` classification is not a buy/sell/hold recommendation.
 It is a signal-routing decision that determines whether further analysis is warranted.
 
 ---

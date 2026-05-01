@@ -21,8 +21,8 @@ Use crowd-scan on a fictional social media signal around Company X and AI infras
 - [ ] Lists which penalties were applied
 - [ ] Classifies signal trajectory
 - [ ] Includes priced-in risk assessment
-- [ ] Separates Crowd Signal Quality from market transmission and trade-fit
-- [ ] Trade-fit classification is `tradeable`, `watchlist`, or `reject` — not buy/sell/hold
+- [ ] Separates Crowd Signal Quality from market transmission and signal fit
+- [ ] Signal fit classification is `analysis-ready`, `monitor`, or `reject` — not buy/sell/hold
 - [ ] Does not recommend buying Company X
 - [ ] Includes "not a buy/sell/hold recommendation" reminder
 
