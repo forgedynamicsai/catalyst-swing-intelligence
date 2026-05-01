@@ -133,6 +133,33 @@ base workflow.
 
 ---
 
+## v0.5 Guided Terminal Workflow
+
+v0.5 adds three operability commands on top of the v0.3/v0.4 scoring and memory engine:
+
+| Command | Purpose |
+|---|---|
+| `wizard` | Guided step-by-step workflow — theme → queries → CSV → validate → score → report → observe |
+| `validate` | Pre-flight policy gate — checks schema, ranges, source classes, booleans, advisory language |
+| `import-md` | Converts LLM-produced markdown evidence tables into CSI evidence CSV |
+
+**Architecture — thin harness, fat deterministic code:**
+
+- `validation.py` — all validation logic (reused by wizard and import-md)
+- `importer.py` — markdown parsing and CSV import (calls validation after import)
+- `wizard.py` — thin orchestration harness over existing scoring, memory, and validation functions
+- `csi.py` — command registration only; lazy imports keep the harness thin
+
+The wizard does not perform web searches or make recommendations.
+
+```bash
+python tools/csi/csi.py wizard --dry-run
+python tools/csi/csi.py validate evidence.csv
+python tools/csi/csi.py import-md evidence.md --output evidence.csv
+```
+
+---
+
 ## Running Tests
 
 ```bash

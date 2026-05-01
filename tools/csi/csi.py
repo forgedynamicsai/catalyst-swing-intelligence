@@ -713,6 +713,24 @@ def main() -> None:
     p_pb.add_argument("--output", default="playbooks/crowd-signal-playbook.md", help="Output path")
     p_pb.add_argument("--data-dir", default="data/csi", help="Data directory")
 
+    # v0.5 operability commands
+    p_val = sub.add_parser("validate", help="Validate evidence CSV schema and values")
+    p_val.add_argument("evidence", help="Path to evidence CSV file")
+    p_val.add_argument("--strict", action="store_true", help="Treat warnings as errors")
+
+    p_imd = sub.add_parser("import-md", help="Import markdown evidence table to CSV")
+    p_imd.add_argument("markdown", help="Path to markdown file containing evidence table")
+    p_imd.add_argument("--output", default="evidence.csv", help="Output CSV path")
+    p_imd.add_argument("--append", action="store_true", help="Append to existing CSV")
+
+    p_wiz = sub.add_parser("wizard", help="Guided evidence-to-memory workflow")
+    p_wiz.add_argument("--theme", default="", help="Market theme (skips theme prompt)")
+    p_wiz.add_argument("--evidence", default="", help="Path to existing evidence CSV")
+    p_wiz.add_argument("--dry-run", action="store_true",
+                       help="Print planned workflow without interactive prompts")
+    p_wiz.add_argument("--data-dir", default="data/csi", help="Observations data directory")
+    p_wiz.add_argument("--reports-dir", default="reports/csi", help="Reports directory")
+
     args = parser.parse_args()
 
     if args.command == "queries":
@@ -754,6 +772,25 @@ def main() -> None:
     elif args.command == "playbook":
         import memory as _mem
         print(_mem.cmd_playbook(args.data_dir, args.output))
+    elif args.command == "validate":
+        import validation as _val
+        output, code = _val.cmd_validate(args.evidence, args.strict)
+        print(output)
+        sys.exit(code)
+    elif args.command == "import-md":
+        import importer as _imp
+        output, code = _imp.import_md(args.markdown, args.output, args.append)
+        print(output)
+        sys.exit(code)
+    elif args.command == "wizard":
+        import wizard as _wiz
+        _wiz.run_wizard(
+            theme=args.theme,
+            evidence_path=args.evidence,
+            dry_run=args.dry_run,
+            data_dir=args.data_dir,
+            reports_dir=args.reports_dir,
+        )
 
 
 if __name__ == "__main__":

@@ -6,6 +6,69 @@ Minimal, search-first crowd signal scoring tool.
 
 ---
 
+## Guided Workflow
+
+New users: run the wizard to walk through the full workflow step by step.
+
+```bash
+python tools/csi/csi.py wizard
+```
+
+The wizard walks through:
+
+1. Theme entry
+2. Search query generation
+3. Evidence CSV creation
+4. Research pause (open-web or LLM search)
+5. Validation
+6. Scoring
+7. Report generation
+8. Observation storage
+9. Outcome-review next steps
+
+For a non-interactive preview of the planned workflow:
+
+```bash
+python tools/csi/csi.py wizard --theme "AI data center power scarcity" --dry-run
+```
+
+---
+
+## Validate Evidence
+
+Before scoring, validate that your evidence CSV is well-formed:
+
+```bash
+python tools/csi/csi.py validate evidence.csv
+```
+
+Use `--strict` to treat warnings as errors:
+
+```bash
+python tools/csi/csi.py validate evidence.csv --strict
+```
+
+---
+
+## Import Markdown Evidence
+
+LLMs and search agents produce markdown tables more reliably than CSV.
+Import a markdown evidence table directly:
+
+```bash
+python tools/csi/csi.py import-md evidence.md --output evidence.csv
+```
+
+Use `--append` to add rows to an existing CSV:
+
+```bash
+python tools/csi/csi.py import-md more_evidence.md --output evidence.csv --append
+```
+
+See `tools/csi/sample_evidence.md` for the expected markdown table format.
+
+---
+
 ## Purpose
 
 This tool implements the deterministic scoring model from `docs/crowd-signal-scoring.md`

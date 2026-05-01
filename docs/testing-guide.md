@@ -180,13 +180,55 @@ No private files should appear.
 
 ---
 
+## Test — v0.5 Operability Commands
+
+Run these after any change to `validation.py`, `importer.py`, or `wizard.py`.
+
+```bash
+# Validate sample evidence
+python tools/csi/csi.py validate tools/csi/sample_evidence.csv
+
+# Import sample markdown evidence
+python tools/csi/csi.py import-md tools/csi/sample_evidence.md --output /tmp/csi_imported.csv
+
+# Wizard dry-run (non-interactive)
+python tools/csi/csi.py wizard --theme "Fictional AI infrastructure signal" --dry-run
+```
+
+### Manual wizard test (interactive)
+
+```bash
+python tools/csi/csi.py wizard
+```
+
+Follow the prompts. Verify:
+- Banner includes non-advisory boundary
+- Queries are generated
+- Template creation is offered
+- Validation runs before scoring
+- Observation save is offered
+- Next-steps commands are printed
+
+---
+
+## Automated Test Suite
+
+```bash
+python -m unittest discover -s tests
+```
+
+Expected: 93+ tests pass, 0 failures.
+
+---
+
 ## When to Run Tests
 
 | Event | Tests to run |
 |---|---|
 | Edit `SKILL.md` | Manual skill tests (evaluation-tests.md) |
 | Edit `csi.py` | Automated + manual CLI smoke tests |
+| Edit `validation.py` / `importer.py` / `wizard.py` | v0.5 operability tests |
 | Edit scoring constants | Automated tests + verify score range |
-| Edit sample_evidence.csv | Report smoke test + private data audit |
+| Edit sample_evidence.csv or .md | Import + report smoke test + private data audit |
 | Before commit | Full automated suite + private data audit |
 | Before PR | All of the above |

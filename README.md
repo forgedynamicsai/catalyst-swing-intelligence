@@ -136,14 +136,27 @@ and [`docs/legal-risk-release-checklist.md`](docs/legal-risk-release-checklist.m
 
 ---
 
+## Guided Local Workflow
+
+New users can run:
+
+```bash
+python tools/csi/csi.py wizard
+```
+
+This walks through the evidence-to-memory workflow without requiring users to memorize every command. Use `--dry-run` to preview the steps non-interactively.
+
+---
+
 ## Reference Implementation
 
 This repo includes a minimal search-first reference implementation under `tools/csi/`.
 
 It does not require paid APIs.
 
-It can generate search queries, create an evidence CSV template, score evidence
-deterministically, and write a markdown crowd signal report.
+It can generate search queries, validate and import evidence, score evidence
+deterministically, write a markdown crowd signal report, and store observations
+in a local memory flywheel.
 
 Use it when you want a low-cost local workflow or a deterministic scoring helper
 for the agent skill.
