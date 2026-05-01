@@ -2,6 +2,10 @@
 
 Design pattern for instructing LLMs to harvest evidence from search APIs.
 
+**Note:** This pattern is documented for users who choose to use LLM search APIs
+(such as xAI/Grok). The core CSI workflow is search-first and works without any
+paid API — see `tools/csi/csi.py wizard` and `tools/csi/csi.py queries`.
+
 ## Problem
 
 Manual search for crowd signal evidence is slow. Using an LLM to orchestrate search APIs is fast, but requires careful prompt design to avoid:

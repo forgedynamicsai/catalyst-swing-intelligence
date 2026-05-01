@@ -1,6 +1,33 @@
-# xAI/Grok Evidence Harvest Adapter (v0.6)
+# xAI/Grok Evidence Harvest Adapter
 
-This optional module harvests crowd signal evidence from xAI/Grok via the Responses API, using X Search and Web Search tools.
+**This adapter is optional. The core Catalyst Swing Intelligence repo is public,
+local-first, and requires no paid APIs, no xAI account, and no external services.**
+
+Core CSI does not require xAI, Grok, paid APIs, or external services. This adapter
+is an optional automation path for users who choose to provide their own `XAI_API_KEY`.
+API keys are read only from environment variables, are never stored, and are never
+committed to any file.
+
+## Who This Is For
+
+This adapter is for users who:
+
+- already have xAI API access and want to automate evidence harvesting,
+- prefer to skip manual searching and have Grok run X Search + Web Search on their behalf,
+- understand that automation does not improve signal quality — only evidence completeness.
+
+**If you do not have an `XAI_API_KEY`, ignore this file entirely.** The full CSI
+workflow — queries, template, validate, score, report, observe — works without it.
+Run `python tools/csi/csi.py wizard` instead.
+
+## What It Does NOT Do
+
+- It does not make buy/sell/hold recommendations.
+- It does not replace your own judgment or fundamental analysis.
+- It does not guarantee complete source coverage.
+- It does not provide price targets, expected returns, or alpha claims.
+- It does not store your API key.
+- It does not work without your explicit `export XAI_API_KEY="..."`.
 
 ## Overview
 
@@ -11,11 +38,9 @@ The harvest adapter allows you to:
 - Track costs to `data/csi/xai_costs.jsonl`
 - Save raw API responses for audit and debugging
 
-**Key principle:** The adapter is optional. The core CSI CLI works without any paid API access. This adapter is for users who want to accelerate evidence discovery.
-
 ## Requirements
 
-- `XAI_API_KEY` environment variable set (from xAI)
+- `XAI_API_KEY` environment variable set (from xAI) — **never** a `.env` file
 - No additional Python packages required (uses standard library only)
 
 ## Installation

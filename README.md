@@ -174,37 +174,49 @@ See [`tools/csi/README.md`](tools/csi/README.md) and
 
 ---
 
-## Optional: Personal xAI/Grok Harvest
+## Optional xAI/Grok Adapter
 
-The reference implementation includes an **optional** xAI/Grok harvest adapter for users
-who want to accelerate evidence discovery using the Responses API.
+Catalyst Swing Intelligence works without xAI or any paid API.
 
-The public core remains fully usable without any paid API access. This adapter is optional.
+Core CSI does not require xAI, Grok, paid APIs, or external services. The xAI/Grok
+harvest adapter is optional. It is intended for users who choose to automate evidence
+harvesting with their own `XAI_API_KEY`. API keys are read only from environment
+variables, are never stored, and are never committed.
+
+The optional `harvest-xai` command lets users who already have xAI API access automate
+X/Web evidence harvesting:
 
 ```bash
-export XAI_API_KEY="your_xai_api_key"
-
-# Basic harvest
-python tools/csi/csi.py harvest-xai "AI data center power scarcity"
-
-# Full pipeline (harvest → import → validate → score → report → observe)
+export XAI_API_KEY="your_key"
 python tools/csi/csi.py harvest-xai "AI data center power scarcity" --auto-score
+```
 
-# Convenience alias
-python tools/csi/csi.py oneclick "AI data center power scarcity"
+This runs the full pipeline automatically:
+harvest → markdown import → validate → score → report → observe → cost log
+
+Without xAI, the same pipeline runs manually:
+
+```bash
+python tools/csi/csi.py wizard
+# or step by step:
+python tools/csi/csi.py queries "AI data center power scarcity"
+python tools/csi/csi.py template --output evidence.csv
+# ... fill evidence.csv from your own searches ...
+python tools/csi/csi.py validate evidence.csv
+python tools/csi/csi.py score evidence.csv
+python tools/csi/csi.py report evidence.csv --output report.md
+python tools/csi/csi.py observe evidence.csv --theme "AI data center power scarcity"
 ```
 
 The adapter:
 - Uses X Search and Web Search tools for evidence discovery
 - Distinguishes narrative velocity (X virality) from evidence quality
-- Outputs CSI-compatible markdown tables
-- Logs costs to `data/csi/xai_costs.jsonl`
+- Outputs CSI-compatible markdown evidence tables
+- Logs API costs to `data/csi/xai_costs.jsonl` (gitignored)
 - Supports the full scoring and memory-flywheel pipeline
 - Preserves all non-advisory boundaries
 
-See [`docs/xai-harvest-adapter.md`](docs/xai-harvest-adapter.md),
-[`docs/search-handoff.md`](docs/search-handoff.md),
-and [`examples/xai-harvest-example.md`](examples/xai-harvest-example.md).
+See [`docs/xai-harvest-adapter.md`](docs/xai-harvest-adapter.md) for full documentation.
 
 ---
 
