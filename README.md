@@ -136,10 +136,38 @@ and [`docs/legal-risk-release-checklist.md`](docs/legal-risk-release-checklist.m
 
 ---
 
+## Reference Implementation
+
+This repo includes a minimal search-first reference implementation under `tools/csi/`.
+
+It does not require paid APIs.
+
+It can generate search queries, create an evidence CSV template, score evidence
+deterministically, and write a markdown crowd signal report.
+
+Use it when you want a low-cost local workflow or a deterministic scoring helper
+for the agent skill.
+
+```bash
+python tools/csi/csi.py queries "AI data center power scarcity"
+python tools/csi/csi.py template --output evidence.csv
+python tools/csi/csi.py score tools/csi/sample_evidence.csv
+python tools/csi/csi.py report tools/csi/sample_evidence.csv --output report.md
+python tools/csi/csi.py demo
+```
+
+See [`tools/csi/README.md`](tools/csi/README.md) and
+[`docs/reference-implementation.md`](docs/reference-implementation.md).
+
+---
+
 ## Evaluation Tests
 
 See [`docs/evaluation-tests.md`](docs/evaluation-tests.md) for a manual test
 suite to run after any change to `SKILL.md`.
+
+See [`docs/testing-guide.md`](docs/testing-guide.md) for the automated test
+suite for the reference implementation.
 
 ---
 
@@ -147,6 +175,3 @@ suite to run after any change to `SKILL.md`.
 
 This is a decision-support framework, not financial advice.
 See [`DISCLAIMER.md`](DISCLAIMER.md) for the full disclaimer.
-
-**TODO before publishing:** Replace `[OWNER]` in `LICENSE` with the confirmed
-license owner name and confirm that MIT license is appropriate.

@@ -1,0 +1,7 @@
+claim,source_name,source_url,source_class,source_date,source_type,independence_rating,evidence_quality,specificity,catalyst_alignment,dissent_quality,time_signal,is_duplicate,notes
+"Power demand from AI data centers will exceed grid capacity in key markets","TechPub Research","https://example.com/techpub1","trade_publication","2025-11-01","article",15,16,15,8,0,8,false,"analyst report; strong mechanism; fictional example"
+"Three hyperscalers cited power scarcity on Q3 earnings calls","EarningsTracker","https://example.com/et1","earnings_transcript","2025-10-20","transcript",18,18,17,9,3,9,false,"primary source; named catalyst; fictional example"
+"AI power demand narrative gaining traction on investing forums","ForumAgg","https://example.com/forum1","investing_forum","2025-11-10","forum",8,6,10,6,2,7,false,"growing thread count; fictional example"
+"Crowd signal quality is provisional — grid constraints are regional not universal","BearAnalyst","https://example.com/bear1","trade_publication","2025-11-05","article",14,13,12,5,4,6,false,"credible dissent; regional caveat; fictional example"
+"Power contract announcements accelerating per SEC filings","FilingScanner","https://example.com/sec1","primary_filing","2025-10-15","filing",17,17,16,9,0,8,false,"cross-checked 3 filings; fictional example"
+"Retail chatter on social media about AI power plays","SocialAgg","https://example.com/social1","social_media","2025-11-12","social",5,4,6,4,0,9,false,"volume rising; low evidence quality; fictional example"
