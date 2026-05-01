@@ -57,6 +57,72 @@ python tools/csi/csi.py demo
 
 ---
 
+## Memory Flywheel Command Tests
+
+Run these after any change to `tools/csi/memory.py`.
+
+```bash
+# Observe — score + save to local data dir
+python tools/csi/csi.py observe tools/csi/sample_evidence.csv \
+  --theme "Fictional AI infrastructure signal" \
+  --data-dir /tmp/csi-data \
+  --reports-dir /tmp/csi-reports
+
+# List — show observations and outcome status
+python tools/csi/csi.py list --data-dir /tmp/csi-data
+
+# Outcome — attach outcome review (replace SIGNAL_ID from list output)
+python tools/csi/csi.py outcome SIGNAL_ID \
+  --event-confirmed true \
+  --narrative-mainstreamed true \
+  --trajectory-correct true \
+  --catalyst-occurred true \
+  --transmission-confirmed partial \
+  --usefulness useful \
+  --failure-mode none \
+  --notes "Fictional outcome." \
+  --data-dir /tmp/csi-data
+
+# Monthly review
+python tools/csi/csi.py monthly-review \
+  --month 2026-05 \
+  --data-dir /tmp/csi-data \
+  --output /tmp/csi-review.md
+
+# Playbook
+python tools/csi/csi.py playbook \
+  --data-dir /tmp/csi-data \
+  --output /tmp/csi-playbook.md
+```
+
+### Memory Flywheel Verification Checklist
+
+| Check | Expected |
+|---|---|
+| `observe` creates `observations.jsonl` | Always |
+| `observe` creates report file in reports dir | Always |
+| Duplicate theme → new ID with suffix (-2, -3) | Always |
+| `list` shows "unreviewed" before outcome | Always |
+| `list` shows "reviewed" after outcome | Always |
+| `outcome` with unknown signal_id exits nonzero | Always |
+| `monthly-review` with no data → valid empty-state markdown | Always |
+| `playbook` with < 5 observations → "Insufficient data" message | Always |
+| All outputs contain "Non-Advisory Boundary" | Always |
+| No output contains "tradeable" or "watchlist" | Always |
+| No output suggests purchases, investments, or companies to buy | Always |
+
+---
+
+## Automated Test Suite
+
+```bash
+python -m unittest discover -s tests
+```
+
+Expected: 53+ tests pass, 0 failures.
+
+---
+
 ## Private Data Audit
 
 Run from repo root after any build or edit:

@@ -4,3 +4,13 @@ private/
 .env
 .env.*
 .DS_Store
+
+# Generated runtime data (memory flywheel)
+data/csi/*.jsonl
+reports/csi/*.md
+reviews/csi/*.md
+playbooks/crowd-signal-playbook.md
+
+# Python cache
+__pycache__/
+*.pyc

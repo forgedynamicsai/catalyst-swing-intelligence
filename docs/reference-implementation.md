@@ -66,6 +66,41 @@ The scoring model implements the full 100-point model from `docs/crowd-signal-sc
 
 ---
 
+## Memory Flywheel
+
+v0.4 adds a local memory flywheel built on top of the deterministic scoring engine.
+
+```
+Score signal → Save observation → Track outcome → Monthly review →
+Suggested playbook updates → Better future crowd-signal assessment.
+```
+
+**What the flywheel learns:**
+
+Which crowd-signal patterns were useful for identifying real narratives, catalysts,
+trajectories, source combinations, and market-transmission mechanisms.
+
+**What the flywheel does not learn:**
+
+Which stocks to buy.
+
+**Signal classification:** `analysis-ready / monitor / reject`
+
+This replaces `tradeable / watchlist / reject` in all new outputs.
+See `docs/memory-flywheel.md` for full definitions.
+
+**Data files (all gitignored):**
+
+```
+data/csi/observations.jsonl
+data/csi/outcomes.jsonl
+reports/csi/
+reviews/csi/
+playbooks/crowd-signal-playbook.md
+```
+
+---
+
 ## Relationship to the Agent Skill
 
 | Dimension | Agent Skill (`SKILL.md`) | Reference Implementation (`tools/csi/`) |

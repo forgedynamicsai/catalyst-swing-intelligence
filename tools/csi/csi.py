@@ -677,6 +677,40 @@ def main() -> None:
 
     sub.add_parser("demo", help="Run built-in demo with sample evidence")
 
+    # Memory flywheel commands
+    p_obs = sub.add_parser("observe", help="Score evidence and save as an observation")
+    p_obs.add_argument("evidence", help="Path to evidence CSV file")
+    p_obs.add_argument("--theme", required=True, help="Market theme for this signal")
+    p_obs.add_argument("--notes", default="", help="Optional notes")
+    p_obs.add_argument("--data-dir", default="data/csi", help="Observations data directory")
+    p_obs.add_argument("--reports-dir", default="reports/csi", help="Reports output directory")
+
+    p_ls = sub.add_parser("list", help="List stored observations")
+    p_ls.add_argument("--month", default=None, help="Filter by month (YYYY-MM)")
+    p_ls.add_argument("--data-dir", default="data/csi", help="Observations data directory")
+
+    p_out = sub.add_parser("outcome", help="Attach outcome review to an observation")
+    p_out.add_argument("signal_id", help="Signal ID to review")
+    p_out.add_argument("--event-confirmed", default="unknown", help="true|false|unknown")
+    p_out.add_argument("--narrative-mainstreamed", default="unknown", help="true|false|unknown")
+    p_out.add_argument("--trajectory-correct", default="unknown", help="true|false|unknown")
+    p_out.add_argument("--catalyst-occurred", default="unknown", help="true|false|unknown")
+    p_out.add_argument("--transmission-confirmed", default="unknown", help="yes|partial|no|unknown")
+    p_out.add_argument("--usefulness", default="unknown", help="useful|mixed|not_useful|unknown")
+    p_out.add_argument("--failure-mode", default="none",
+                       help="none|single_source|hype|priced_in|wrong_transmission|no_catalyst|trajectory_wrong|other")
+    p_out.add_argument("--notes", default="", help="Optional notes")
+    p_out.add_argument("--data-dir", default="data/csi", help="Data directory")
+
+    p_mr = sub.add_parser("monthly-review", help="Generate monthly effectiveness review")
+    p_mr.add_argument("--month", required=True, help="Month to review (YYYY-MM)")
+    p_mr.add_argument("--output", default=None, help="Output path")
+    p_mr.add_argument("--data-dir", default="data/csi", help="Data directory")
+
+    p_pb = sub.add_parser("playbook", help="Generate crowd signal playbook from accumulated data")
+    p_pb.add_argument("--output", default="playbooks/crowd-signal-playbook.md", help="Output path")
+    p_pb.add_argument("--data-dir", default="data/csi", help="Data directory")
+
     args = parser.parse_args()
 
     if args.command == "queries":
@@ -689,6 +723,35 @@ def main() -> None:
         print(cmd_report(args.evidence, args.output, args.theme))
     elif args.command == "demo":
         print(cmd_demo())
+    elif args.command == "observe":
+        import memory as _mem
+        print(_mem.cmd_observe(
+            args.evidence, args.theme, args.notes,
+            args.data_dir, args.reports_dir,
+        ))
+    elif args.command == "list":
+        import memory as _mem
+        print(_mem.cmd_list(args.month, args.data_dir))
+    elif args.command == "outcome":
+        import memory as _mem
+        print(_mem.cmd_outcome(
+            args.signal_id,
+            event_confirmed=args.event_confirmed,
+            narrative_mainstreamed=args.narrative_mainstreamed,
+            trajectory_correct=args.trajectory_correct,
+            catalyst_occurred=args.catalyst_occurred,
+            transmission_confirmed=args.transmission_confirmed,
+            usefulness=args.usefulness,
+            failure_mode=args.failure_mode,
+            notes=args.notes,
+            data_dir=args.data_dir,
+        ))
+    elif args.command == "monthly-review":
+        import memory as _mem
+        print(_mem.cmd_monthly_review(args.month, args.data_dir, args.output))
+    elif args.command == "playbook":
+        import memory as _mem
+        print(_mem.cmd_playbook(args.data_dir, args.output))
 
 
 if __name__ == "__main__":

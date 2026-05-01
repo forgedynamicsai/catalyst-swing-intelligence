@@ -45,6 +45,34 @@ python tools/csi/csi.py report tools/csi/sample_evidence.csv --output report.md
 
 # Run a built-in demo (fictional data)
 python tools/csi/csi.py demo
+
+# --- Memory Flywheel ---
+
+# Save a scored observation to local memory
+python tools/csi/csi.py observe tools/csi/sample_evidence.csv --theme "AI infrastructure"
+
+# List stored observations
+python tools/csi/csi.py list
+
+# List observations for a specific month
+python tools/csi/csi.py list --month 2026-05
+
+# Attach an outcome review to an observation
+python tools/csi/csi.py outcome SIGNAL_ID \
+  --event-confirmed true \
+  --narrative-mainstreamed true \
+  --trajectory-correct true \
+  --catalyst-occurred true \
+  --transmission-confirmed partial \
+  --usefulness useful \
+  --failure-mode none \
+  --notes "Fictional outcome review."
+
+# Generate monthly effectiveness review
+python tools/csi/csi.py monthly-review --month 2026-05
+
+# Generate crowd signal playbook from accumulated data
+python tools/csi/csi.py playbook
 ```
 
 ---
@@ -122,6 +150,26 @@ Implements the 100-point Crowd Signal Quality model from `docs/crowd-signal-scor
 
 ---
 
+## Memory Flywheel — Local Data Files
+
+Generated at runtime. Gitignored. Not for public repo.
+
+| Path | Contents |
+|---|---|
+| `data/csi/observations.jsonl` | One scored observation per line |
+| `data/csi/outcomes.jsonl` | One outcome review per line |
+| `reports/csi/` | Saved markdown reports (one per observation) |
+| `reviews/csi/` | Monthly effectiveness reviews |
+| `playbooks/crowd-signal-playbook.md` | Generated playbook from accumulated data |
+
+**Non-advisory boundary:** The memory flywheel evaluates crowd-signal usefulness.
+It does not recommend purchases, investments, trades, position sizing,
+or buy/sell/hold actions for any security.
+
+**Signal classification uses `analysis-ready / monitor / reject`** (not `tradeable`).
+
+---
+
 ## Limitations
 
 - Notes-based penalty detection is keyword-matching only.
@@ -129,6 +177,7 @@ Implements the 100-point Crowd Signal Quality model from `docs/crowd-signal-scor
 - Trajectory classification uses simple heuristics, not time-series analysis.
 - This tool does not fetch prices, fundamentals, or real-time data.
 - This is a decision-support aid. It does not replace judgment.
+- Playbook suggestions require human review before any scoring changes.
 
 ---
 

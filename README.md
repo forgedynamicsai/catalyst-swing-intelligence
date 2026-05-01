@@ -161,6 +161,31 @@ See [`tools/csi/README.md`](tools/csi/README.md) and
 
 ---
 
+## Memory Flywheel
+
+The reference implementation can store scored crowd-signal observations locally,
+attach later outcome reviews, generate monthly effectiveness reviews, and suggest
+updates to a local crowd-signal playbook.
+
+This helps evaluate which crowd-signal patterns were useful over time.
+
+It does not evaluate whether the skill picked winning securities.
+
+The crowd-signal playbook is not an investment playbook and must not suggest
+purchases, investments, trades, position sizing, or buy/sell/hold actions.
+
+```bash
+python tools/csi/csi.py observe tools/csi/sample_evidence.csv --theme "AI infrastructure"
+python tools/csi/csi.py list
+python tools/csi/csi.py outcome SIGNAL_ID --usefulness useful --failure-mode none
+python tools/csi/csi.py monthly-review --month 2026-05
+python tools/csi/csi.py playbook
+```
+
+See [`docs/memory-flywheel.md`](docs/memory-flywheel.md).
+
+---
+
 ## Evaluation Tests
 
 See [`docs/evaluation-tests.md`](docs/evaluation-tests.md) for a manual test
