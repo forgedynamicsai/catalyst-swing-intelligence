@@ -199,6 +199,19 @@ See [`docs/memory-flywheel.md`](docs/memory-flywheel.md).
 
 ---
 
+## Known Gaps and Roadmap
+
+This project is usable today as a search-first, local, deterministic
+crowd-signal intelligence workflow. The current known gaps are:
+
+1. No built-in web search runner yet.
+2. No local dashboard yet.
+3. No large-scale real-world calibration yet.
+
+See [`docs/known-gaps.md`](docs/known-gaps.md) and [`docs/roadmap.md`](docs/roadmap.md).
+
+---
+
 ## Evaluation Tests
 
 See [`docs/evaluation-tests.md`](docs/evaluation-tests.md) for a manual test

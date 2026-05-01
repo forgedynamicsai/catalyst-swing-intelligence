@@ -126,5 +126,70 @@ class TestNoAdvisoryLanguageInDocs(unittest.TestCase):
         self.assertIn("Trade Decision", skill)
 
 
+class TestKnownGapsAndRoadmap(unittest.TestCase):
+    """Transparency docs must exist and maintain non-advisory framing."""
+
+    def test_known_gaps_file_exists(self):
+        content = _read("docs/known-gaps.md")
+        self.assertGreater(len(content), 0)
+
+    def test_roadmap_file_exists(self):
+        content = _read("docs/roadmap.md")
+        self.assertGreater(len(content), 0)
+
+    def test_readme_links_to_known_gaps(self):
+        readme = _read("README.md")
+        self.assertIn("known-gaps.md", readme)
+
+    def test_readme_links_to_roadmap(self):
+        readme = _read("README.md")
+        self.assertIn("roadmap.md", readme)
+
+    def test_readme_known_gaps_section_present(self):
+        readme = _read("README.md")
+        self.assertIn("Known Gaps and Roadmap", readme)
+
+    def test_known_gaps_no_buy_sell_hold_claims(self):
+        content = _read("docs/known-gaps.md").lower()
+        for phrase in ["buy this", "sell this", "invest in this", "this is a buy"]:
+            self.assertNotIn(phrase, content)
+
+    def test_roadmap_no_performance_claims(self):
+        content = _read("docs/roadmap.md").lower()
+        # Check that these do not appear as positive claims
+        # (they may appear in prohibition lists as "will not add X")
+        for phrase in [
+            "predicts winning trades",
+            "finds stocks to buy",
+            "this tool beats the market",
+            "guaranteed alpha",
+        ]:
+            self.assertNotIn(phrase, content)
+
+    def test_known_gaps_conservative_framing(self):
+        content = _read("docs/known-gaps.md")
+        self.assertIn("source-limited", content)
+
+    def test_roadmap_non_advisory_boundary(self):
+        content = _read("docs/roadmap.md")
+        self.assertIn("not investment recommendations", content)
+
+    def test_known_gaps_non_advisory_boundary(self):
+        content = _read("docs/known-gaps.md")
+        self.assertIn("not investment recommendations", content)
+
+    def test_roadmap_covers_three_versions(self):
+        content = _read("docs/roadmap.md")
+        self.assertIn("v0.6", content)
+        self.assertIn("v0.7", content)
+        self.assertIn("v0.8", content)
+
+    def test_known_gaps_covers_three_gaps(self):
+        content = _read("docs/known-gaps.md")
+        self.assertIn("web search", content.lower())
+        self.assertIn("dashboard", content.lower())
+        self.assertIn("calibration", content.lower())
+
+
 if __name__ == "__main__":
     unittest.main()
