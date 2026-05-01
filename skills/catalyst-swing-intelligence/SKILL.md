@@ -150,29 +150,74 @@ Hold cash until price enters the zone.
 
 **Use when a crowd narrative emerges from X, Reddit, or financial media.**
 
-### Sourcing rule
-Every output must declare exact sources (X/finTwit, Reddit, specific accounts) and
-evidence quality. Never present crowd opinion as personal analysis. Always include
-"crowd signal, not advice" framing. Offer to pull raw posts for verification.
+This mode scores the quality of the crowd signal — not the attractiveness of
+any security. See `docs/crowd-signal-scoring.md` for the full model.
 
-### Convergence scoring
 ```
-convergence_score = volume × independence × specificity
+Crowd Signal Quality  ≠  Security Risk  ≠  Trade Decision
 ```
-- **Volume**: 1 (thin) → 3 (high volume)
-- **Independence**: 1 (echo chamber) → 3 (independent sources reaching same conclusion)
-- **Specificity**: 1 (vague theme) → 3 (named mechanism + dated catalyst + ticker)
-- Max score: 9. Scores below 4 are not tradeable signals.
+
+### Sourcing rule
+Every output must declare exact sources (X/finTwit, Reddit, specific accounts)
+and evidence quality. Never present crowd opinion as personal analysis. Always
+frame output as "crowd signal assessment, not financial advice." Offer to pull
+raw posts for verification.
+
+### Crowd Signal Quality Score — 100-point model
+
+**Base components (max 100):**
+
+| Component | Weight | What it measures |
+|---|---:|---|
+| Signal volume | 15 | How much discussion exists |
+| Source independence | 20 | Whether sources are unrelated or echoing each other |
+| Specificity | 20 | Whether the crowd names a causal mechanism, not just a ticker |
+| Evidence quality | 20 | Whether claims cite filings, transcripts, data, or primary sources |
+| Time acceleration | 10 | Whether attention is increasing over the relevant window |
+| Catalyst alignment | 10 | Whether the signal maps to a dated or identifiable catalyst |
+| Dissent quality | 5 | Whether credible opposing views are acknowledged |
+
+**Penalties (applied after base score):**
+
+| Penalty | Max deduction | Why |
+|---|---:|---|
+| Meme/hype penalty | −15 | High emotion, low mechanism |
+| Crowding penalty | −15 | Narrative already widely known |
+| Price-moved penalty | −20 | Signal may already be priced in |
+| Single-source penalty | −20 | Echo chamber risk |
+| Loose ticker-basket penalty | −10 | Weak earnings transmission |
+
+Score interpretation: 75–100 = high quality · 50–74 = moderate · 25–49 = weak · 0–24 = noise.
+
+**The Crowd Signal Quality Score is not a buy score, sell score, risk rating, or
+expected-return score. A high score means the signal is well-evidenced — it does
+not mean the security is safe, cheap, or likely to rise.**
+
+### Signal trajectory
+Classify the crowd signal lifecycle as one of:
+
+| Trajectory | Meaning |
+|---|---|
+| Emerging | Low volume, high specificity, early signal |
+| Accelerating | Independent mentions increasing |
+| Mainstreaming | Financial media and generalist accounts picking it up |
+| Saturated | Widely known, likely crowded |
+| Fading | Repeated old claims, fewer new sources |
+
+Trajectory describes the signal lifecycle only — not price direction, expected
+return, fair value, or any prediction about the underlying security.
 
 ### Workflow
-1. Tag all signals against the catalyst taxonomy.
-2. Score convergence using the formula above.
-3. Apply priced-in filter: has the trade already moved on this signal?
-4. Align to swing window (days / weeks / month / quarter).
+1. Declare source universe.
+2. Tag signals against the catalyst taxonomy.
+3. Score base components and apply penalties.
+4. Classify signal trajectory.
 5. Separate mechanism from tickers.
-6. Confirm earnings transmission is direct, not loose.
-7. Rank the 1–3 cleanest expressions.
-8. Explicitly reject loose baskets and state why.
+6. Confirm market transmission is direct, not loose.
+7. Apply priced-in filter.
+8. Map dissent — credible opposing views.
+9. Rank 1–3 cleanest expressions; explicitly reject loose baskets.
+10. Classify trade fit: `tradeable`, `watchlist`, or `reject`.
 
 ### Catalyst taxonomy tags
 Rates · Inflation · Earnings · Regulation · Fiscal policy · Energy · AI infrastructure ·
@@ -181,25 +226,44 @@ Cyber · Resource nationalism · Critical minerals · Defense spending · Health
 
 ### Output
 ```markdown
-## Crowd Signal
-- Source: [X/finTwit | Reddit | Other — name specific accounts if available]
-- Theme:
-- Mechanism:
-- Timing window:
-- Evidence quality: [official filing | transcript | channel check | rumor | meme-only]
-- Convergence score: __/9 (volume × independence × specificity)
-- Priced-in risk: [not priced | partially priced | priced in]
+## Crowd Signal Assessment
 
-## Best Expressions
-1.
-2.
-3.
+- Theme:
+- Source universe: [X/finTwit | Reddit | Financial media — name accounts if available]
+- Core crowd claim:
+- Mechanism:
+- Signal trajectory: [emerging | accelerating | mainstreaming | saturated | fading]
+- Crowd Signal Quality Score: __/100
+- Penalties applied:
+  - Meme/hype: [−X or none]
+  - Crowding: [−X or none]
+  - Price-moved: [−X or none]
+  - Single-source: [−X or none]
+  - Loose ticker basket: [−X or none]
+- Evidence quality: [filing | transcript | analyst note | channel check | rumor | meme-only]
+- Source independence: [independent | partially echoed | single-source echo]
+- Dissent quality: [credible dissent exists | weak dissent | no dissent found]
+- Priced-in risk: [not priced | partially priced | likely priced in]
+
+## Market Transmission
+
+- Earnings impact:
+- Margin impact:
+- Supply/demand impact:
+- Policy/regulatory impact:
+- Multiple/risk-premium impact:
+- Catalyst timing:
+
+## Trade Fit Classification
+
+- Classification: [tradeable | watchlist | reject]
+- Why:
+- What separate analysis is still required:
+- Not a buy/sell/hold recommendation.
 
 ## Rejected / Too Loose
--
--
 
-## Final Tradeable Version
+-
 ```
 
 ---

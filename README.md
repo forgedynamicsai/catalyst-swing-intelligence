@@ -1,104 +1,152 @@
 # Catalyst Swing Intelligence
 
-A public Claude Code skill for disciplined catalyst-driven swing-trade analysis.
+A Claude Code skill for structuring catalyst-driven market research,
+Wisdom-of-the-Crowds signal assessment, and swing-trade decision discipline.
 
-This skill helps users structure:
+---
 
-- macro regime checks before deploying capital
-- crowd-signal analysis with convergence scoring
-- catalyst thesis construction with required contracts
-- entry quality scoring and add-more zone planning
-- concentration risk review with explicit thresholds
-- earnings gate decisions with pre-written action plans
-- thesis-broken conditions (specific, not generic)
-- hard-deadline liquidation planning
-- long-horizon account separation from swing capital
-- compliant social publishing of trade theses
+## What This Is
 
-It does not tell users what to buy.
+A decision-support framework for:
 
-It forces better questions before capital is deployed.
+- evaluating the quality, independence, specificity, and trajectory of crowd signals
+- structuring catalyst-driven swing trade theses with required invalidation conditions
+- managing concentration risk with explicit thresholds
+- making pre-earnings decisions with pre-written action plans
+- separating long-horizon capital from short-term swing accounts
+- planning exits toward hard liquidity deadlines
+- publishing crowd signal analyses with mandatory financial disclaimers
+
+The core function is to evaluate **whether a crowd narrative is coherent and
+well-evidenced** — not to tell users what to buy.
+
+---
+
+## What This Is Not
+
+This is not a stock-picking bot, financial adviser, signal service, performance
+guarantee, buy score, risk score, expected-return model, or personalized
+investment recommendation.
+
+The Crowd Signal Quality Score measures evidence convergence.
+It does not measure expected return, security safety, or whether a user
+should buy, sell, or hold anything.
+
+See `DISCLAIMER.md` and `docs/legal-risk-release-checklist.md`.
+
+---
+
+## Who This Is For
+
+- Retail investors who want structured decision discipline before deploying capital
+- Traders who want pre-written exit and invalidation rules for every position
+- Users who want to separate crowd signal quality from trade fit
+- Anyone who wants to keep private portfolio context out of public skill logic
+
+---
+
+## Quick Start
+
+```bash
+# 1. Copy the skill into your Claude skills directory
+cp -r skills/catalyst-swing-intelligence/ ~/.claude/skills/
+
+# 2. Copy and fill in your private personalization
+cp skills/catalyst-swing-intelligence/PERSONALIZATION.example.md \
+   skills/catalyst-swing-intelligence/PERSONALIZATION.local.md
+
+# 3. Edit PERSONALIZATION.local.md with your own accounts, risk limits, and rules
+# 4. Never commit PERSONALIZATION.local.md
+```
 
 ---
 
 ## Companion Skills
 
-This skill works best alongside:
+This skill works best alongside two companion skills (not included here):
 
 - **`staged-position-entry`** — entry discipline, tranche sizing, blended cost basis, dry powder rules
 - **`thesis-break-protocol`** — exit rules when a thesis fails, three-strike rule, rationalization checklist
 
 ---
 
-## Installation
+## Which Mode Should I Use?
 
-Copy `skills/catalyst-swing-intelligence/` into your Claude Code skills directory:
+See [`docs/mode-decision-tree.md`](docs/mode-decision-tree.md).
 
-```bash
-cp -r skills/catalyst-swing-intelligence/ ~/.claude/skills/
+| User intent | Mode |
+|---|---|
+| "What is the crowd saying?" | `crowd-scan` |
+| "Build a trade thesis." | `thesis-build` |
+| "Should I hold through earnings?" | `earnings-gate` |
+| "One position is too large." | `concentration-check` |
+| "What is the macro regime?" | `macro-first` |
+| "I have cash after a trim." | `next-cycle` |
+| "There is a geopolitical event." | `geopolitical-catalyst` |
+| "I'm second-guessing a trim." | `regret-check` |
+| "Write a compliant social post." | `publish-signal` |
+| "This is a long-term account." | `long-horizon-account` |
+| "I have a hard liquidity deadline." | `liquidation-plan` |
+
+---
+
+## How Crowd Signals Are Scored
+
+See [`docs/crowd-signal-scoring.md`](docs/crowd-signal-scoring.md).
+
+The **Crowd Signal Quality Score** (0–100) measures evidence convergence:
+
+- Signal volume, source independence, specificity, evidence quality,
+  time acceleration, catalyst alignment, and dissent quality
+- Penalties for meme/hype, crowding, price-movement, single-source, and loose baskets
+- Signal trajectory classification: Emerging → Accelerating → Mainstreaming → Saturated → Fading
+
+```
+Crowd Signal Quality  ≠  Security Risk  ≠  Trade Decision
 ```
 
-Then copy and fill in your personalization:
-
-```bash
-cp skills/catalyst-swing-intelligence/PERSONALIZATION.example.md \
-   skills/catalyst-swing-intelligence/PERSONALIZATION.local.md
-# Edit PERSONALIZATION.local.md with your accounts, deadlines, and rules
-```
+A high score means the signal is well-evidenced. It does not mean you should buy.
 
 ---
 
 ## Public vs Private Files
 
-This repository contains only public reusable skill logic.
+This repository contains only public reusable methodology.
 
-**Do not commit:**
+**Never commit:**
 
-- current holdings
-- cost basis
-- family names
-- account values
+- current holdings or cost basis
+- personal or family names
+- account values or balances
 - liquidity deadlines
 - tax details
 - personalized financial plans
+- `PERSONALIZATION.local.md`
 
-Use `PERSONALIZATION.example.md` as a template. Keep your local version in
-`PERSONALIZATION.local.md` — it is gitignored by default.
+`PERSONALIZATION.local.md` is gitignored by default.
+Use `PERSONALIZATION.example.md` as a template.
 
 ---
 
-## Skill Modes
+## Contributing
 
-| Mode | Trigger | What it produces |
-|---|---|---|
-| `macro-first` | Before screening any names | Regime classification + portfolio instruction |
-| `crowd-scan` | Crowd signal, social sentiment | Signal block with convergence score |
-| `thesis-build` | Build swing trade | Full thesis with 12 required fields |
-| `concentration-check` | >30% in one position | Review + trim recommendation |
-| `earnings-gate` | 1–5 days before earnings | Decision tree + post-call action plan |
-| `geopolitical-catalyst` | War, sanctions, tariffs, export controls | Exposure map |
-| `next-cycle` | Deploy cash, new portfolio | Portfolio table + cash plan |
-| `regret-check` | FOMO, "what if I sell" | Regret analysis + decision |
-| `publish-signal` | X thread, social experiment | Compliant 3-part thread |
-| `long-horizon-account` | Custodial or long-horizon account | Account review with guardrails |
-| `liquidation-plan` | Hard deadline, forced exit | Staged exit schedule |
+See [`CONTRIBUTING.md`](CONTRIBUTING.md),
+[`docs/contributor-evaluation-checklist.md`](docs/contributor-evaluation-checklist.md),
+and [`docs/legal-risk-release-checklist.md`](docs/legal-risk-release-checklist.md).
+
+---
+
+## Evaluation Tests
+
+See [`docs/evaluation-tests.md`](docs/evaluation-tests.md) for a manual test
+suite to run after any change to `SKILL.md`.
 
 ---
 
 ## Disclaimer
 
 This is a decision-support framework, not financial advice.
+See [`DISCLAIMER.md`](DISCLAIMER.md) for the full disclaimer.
 
-See `DISCLAIMER.md` for the full disclaimer.
-
----
-
-## Contributing
-
-See `CONTRIBUTING.md`.
-
----
-
-## License
-
-MIT — see `LICENSE`.
+**TODO before publishing:** Replace `[OWNER]` in `LICENSE` with the confirmed
+license owner name and confirm that MIT license is appropriate.
