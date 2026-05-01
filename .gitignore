@@ -1,0 +1,6 @@
+PERSONALIZATION.local.md
+*.local.md
+private/
+.env
+.env.*
+.DS_Store
