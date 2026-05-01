@@ -165,7 +165,35 @@ python tools/csi/csi.py monthly-review --month 2026-05
 
 # Generate crowd signal playbook from accumulated data
 python tools/csi/csi.py playbook
+
+# --- Optional xAI/Grok Harvest ---
+# Core CSI does not require xAI, Grok, or any paid API.
+# harvest-xai is for users who choose to provide their own XAI_API_KEY.
+# API keys are read from environment variables only — never stored or committed.
+
+export XAI_API_KEY="your_api_key"
+python tools/csi/csi.py harvest-xai "AI data center power scarcity"
+
+# Full pipeline (harvest → import → validate → score → report → observe)
+python tools/csi/csi.py harvest-xai "AI data center power scarcity" --auto-score
+
+# With optional budget warning (display-only, not enforced)
+python tools/csi/csi.py harvest-xai "AI data center power scarcity" \
+  --budget-usd 2.00 --auto-score
+
+# Convenience alias (equivalent to harvest-xai --auto-score)
+python tools/csi/csi.py oneclick "AI data center power scarcity"
+
+# Advanced options
+python tools/csi/csi.py harvest-xai "theme" \
+  --runtime-tools x,web \           # x, web, or x,web (default: x,web)
+  --model grok-3 \                  # xAI model (default: grok-3)
+  --max-sources 30 \                # Hint to Grok (default: 20)
+  --output evidence.md \
+  --auto-score
 ```
+
+See [`docs/xai-harvest-adapter.md`](../../docs/xai-harvest-adapter.md) for full documentation.
 
 ---
 
