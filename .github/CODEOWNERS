@@ -1,0 +1,16 @@
+# CODEOWNERS — catalyst-swing-intelligence
+# All PRs require review from the maintainer.
+
+* @forgedynamicsai
+
+# Core skill and safety-critical files
+skills/ @forgedynamicsai
+tools/csi/ @forgedynamicsai
+docs/legal-risk-release-checklist.md @forgedynamicsai
+docs/contributor-evaluation-checklist.md @forgedynamicsai
+docs/crowd-signal-scoring.md @forgedynamicsai
+docs/memory-flywheel.md @forgedynamicsai
+docs/maintainer-policy.md @forgedynamicsai
+DISCLAIMER.md @forgedynamicsai
+CONTRIBUTING.md @forgedynamicsai
+SECURITY.md @forgedynamicsai

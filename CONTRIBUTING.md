@@ -2,10 +2,48 @@
 
 Contributions are welcome.
 
-Before opening a PR, read this file and the supporting checklists:
+---
 
-- [`docs/contributor-evaluation-checklist.md`](docs/contributor-evaluation-checklist.md)
-- [`docs/legal-risk-release-checklist.md`](docs/legal-risk-release-checklist.md)
+## Before Opening a PR
+
+Read:
+
+- [Maintainer Policy](docs/maintainer-policy.md)
+- [Contributor Evaluation Checklist](docs/contributor-evaluation-checklist.md)
+- [Legal Risk Release Checklist](docs/legal-risk-release-checklist.md)
+- [Testing Guide](docs/testing-guide.md)
+
+Run:
+
+```bash
+python -m unittest discover -s tests
+```
+
+---
+
+## Do Not Submit
+
+Do not submit:
+
+- buy/sell/hold recommendations,
+- purchase or investment recommendations,
+- position sizing,
+- price targets,
+- expected returns,
+- alpha or market-beating claims,
+- personal holdings,
+- account balances,
+- cost basis,
+- family details,
+- private deadlines,
+- credentials,
+- `.env` files,
+- `PERSONALIZATION.local.md`,
+- brokerage or wallet integrations,
+- paid API requirements for core functionality,
+- or scraping workflows that bypass logins, paywalls, or access restrictions.
+
+---
 
 ---
 

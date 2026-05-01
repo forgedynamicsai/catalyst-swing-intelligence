@@ -199,6 +199,41 @@ See [`docs/memory-flywheel.md`](docs/memory-flywheel.md).
 
 ---
 
+## Contributing Safely
+
+This project welcomes contributions that improve crowd-signal assessment,
+evidence quality, scoring consistency, documentation, and local operability.
+
+The official repo does not accept changes that turn the project into a stock
+picker, signal service, financial advice tool, portfolio allocator, or
+recommendation engine.
+
+Before opening a PR, read:
+
+- [Maintainer Policy](docs/maintainer-policy.md)
+- [Contributing Guide](CONTRIBUTING.md)
+- [Contributor Evaluation Checklist](docs/contributor-evaluation-checklist.md)
+
+All PRs should preserve:
+
+```text
+Crowd Signal Quality ≠ Security Risk ≠ Trade Decision
+```
+
+```text
+Crowd Signal Playbook ≠ Investment Playbook
+```
+
+---
+
+## Official Repo vs Forks
+
+Open source means anyone can fork the project. The official repository maintains
+stricter standards: tests must pass, non-advisory boundaries must remain intact,
+and private-data protections must not be weakened.
+
+---
+
 ## Known Gaps and Roadmap
 
 This project is usable today as a search-first, local, deterministic
