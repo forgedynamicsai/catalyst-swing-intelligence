@@ -28,6 +28,35 @@ whether any user should buy, sell, or hold anything.
 
 ---
 
+## From Evidence Harvest to Memory Flywheel
+
+The intended workflow is:
+
+1. Use the agent skill (`/catalyst-swing-intelligence` or `/swing-intelligence`) to generate a search-first evidence-harvest plan.
+2. Search the open web or gather user-provided public sources.
+3. Convert each source into `evidence.csv` using the CSI schema.
+4. Run deterministic scoring.
+5. Generate a markdown report.
+6. Save the report as a local observation.
+7. Add an outcome review later.
+8. Generate monthly effectiveness reviews.
+9. Update the crowd-signal playbook.
+
+```bash
+python tools/csi/csi.py template --output evidence.csv
+python tools/csi/csi.py score evidence.csv
+python tools/csi/csi.py report evidence.csv --output report.md
+python tools/csi/csi.py observe evidence.csv --theme "[THEME]"
+python tools/csi/csi.py list
+python tools/csi/csi.py outcome SIGNAL_ID --event-confirmed unknown --narrative-mainstreamed unknown --trajectory-correct unknown --catalyst-occurred unknown --transmission-confirmed unknown --usefulness unknown --failure-mode other
+python tools/csi/csi.py monthly-review --month YYYY-MM
+python tools/csi/csi.py playbook
+```
+
+The memory flywheel evaluates crowd-signal usefulness, not investment performance.
+
+---
+
 ## Commands
 
 ```bash

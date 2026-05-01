@@ -89,6 +89,40 @@ and AI infrastructure demand is coherent and evidenced.
 
 ---
 
+## Convert Findings to CSI Evidence CSV
+
+Example fictional source mapping:
+
+| CSI column | Example value |
+|---|---|
+| `claim` | Company X reported increased power demand from AI data center customers. |
+| `source_name` | Fictional Utility Q2 Transcript |
+| `source_url` | https://example.com/fictional-transcript |
+| `source_class` | earnings_transcript |
+| `source_date` | 2026-05-01 |
+| `source_type` | transcript |
+| `independence_rating` | 16 |
+| `evidence_quality` | 18 |
+| `specificity` | 17 |
+| `catalyst_alignment` | 8 |
+| `dissent_quality` | 2 |
+| `time_signal` | 6 |
+| `is_duplicate` | false |
+| `notes` | Fictional example only. Mechanism-specific source. |
+
+Command sequence:
+
+```bash
+python tools/csi/csi.py template --output evidence.csv
+python tools/csi/csi.py score evidence.csv
+python tools/csi/csi.py report evidence.csv --output report.md
+python tools/csi/csi.py observe evidence.csv --theme "Fictional AI infrastructure signal"
+```
+
+The CLI score measures Crowd Signal Quality only. It is not a buy/sell/hold score.
+
+---
+
 ## What This Example Demonstrates
 
 1. The Crowd Signal Quality Score (68/100) measures signal evidence — not whether

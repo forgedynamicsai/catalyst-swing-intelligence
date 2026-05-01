@@ -420,7 +420,9 @@ def cmd_queries(theme: str) -> str:
             lines.append(f'  {t.format(theme=theme)}')
     lines.append(
         "\n\nNote: These queries are for manual or agent-driven search. "
-        "No searches are executed. Cost: $0."
+        "No searches are executed. Cost: $0.\n\n"
+        "After searching, enter findings into evidence.csv with:\n"
+        "  python tools/csi/csi.py template --output evidence.csv"
     )
     return "\n".join(lines)
 

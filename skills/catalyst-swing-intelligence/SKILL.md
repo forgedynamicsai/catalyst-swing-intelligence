@@ -267,6 +267,31 @@ Cyber · Resource nationalism · Critical minerals · Defense spending · Health
 ## Rejected / Too Loose
 
 -
+
+## Convert to CSI Evidence CSV
+
+After gathering sources, convert each source into the CSI evidence schema.
+
+Create a blank template: `python tools/csi/csi.py template --output evidence.csv`
+
+Fill one row per source or claim. Required columns: `claim`, `source_name`,
+`source_url`, `source_class`, `source_date`, `independence_rating` (0–20),
+`evidence_quality` (0–20), `specificity` (0–20), `catalyst_alignment` (0–10),
+`dissent_quality` (0–5), `time_signal` (0–10), `is_duplicate` (true/false), `notes`.
+
+Score: `python tools/csi/csi.py score evidence.csv`
+Report: `python tools/csi/csi.py report evidence.csv --output report.md`
+Save: `python tools/csi/csi.py observe evidence.csv --theme "[THEME]"`
+
+Later — add outcome, then generate monthly review and crowd-signal playbook:
+
+`python tools/csi/csi.py outcome SIGNAL_ID --usefulness unknown --failure-mode other`
+`python tools/csi/csi.py monthly-review --month YYYY-MM`
+`python tools/csi/csi.py playbook`
+
+See `tools/csi/README.md` for full source class list and schema.
+The CLI score is not a buy/sell/hold score. It does not recommend purchases,
+investments, trades, position sizing, or companies to buy.
 ```
 
 ---

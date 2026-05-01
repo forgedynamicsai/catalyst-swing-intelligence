@@ -113,13 +113,42 @@ python tools/csi/csi.py playbook \
 
 ---
 
+## Test — Evidence Harvest Bridges to CSI CLI
+
+Run these after any change to the crowd-scan output contract in `SKILL.md`
+or to `examples/crowd-scan-example.md`.
+
+```bash
+python tools/csi/csi.py template --output /tmp/csi_evidence.csv
+python tools/csi/csi.py score tools/csi/sample_evidence.csv
+python tools/csi/csi.py report tools/csi/sample_evidence.csv --output /tmp/csi_report.md
+python tools/csi/csi.py observe tools/csi/sample_evidence.csv \
+  --theme "Fictional AI infrastructure signal" \
+  --data-dir /tmp/csi-data \
+  --reports-dir /tmp/csi-reports
+python tools/csi/csi.py list --data-dir /tmp/csi-data
+```
+
+### What to verify
+
+| Check | Expected |
+|---|---|
+| `SKILL.md` contains `Convert to CSI Evidence CSV` | Always |
+| `SKILL.md` contains `python tools/csi/csi.py template` | Always |
+| `SKILL.md` contains `python tools/csi/csi.py observe` | Always |
+| `crowd-scan-example.md` contains `Convert Findings to CSI Evidence CSV` | Always |
+| `tools/csi/README.md` contains `From Evidence Harvest to Memory Flywheel` | Always |
+| No doc presents the score as buy/sell/hold advice | Always |
+
+---
+
 ## Automated Test Suite
 
 ```bash
 python -m unittest discover -s tests
 ```
 
-Expected: 53+ tests pass, 0 failures.
+Expected: 59+ tests pass, 0 failures.
 
 ---
 
