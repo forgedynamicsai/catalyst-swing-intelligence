@@ -183,6 +183,127 @@ class TestToolSelection(unittest.TestCase):
 
 
 # ===========================================================================
+# Request payload schema — regression tests for "input" vs "messages"
+# HTTP 422 "missing field `input`" is caught here before it hits the API.
+# ===========================================================================
+
+class TestRequestPayloadSchema(unittest.TestCase):
+    """Regression suite for xAI Responses API payload shape."""
+
+    def _capture_body(self, tools="x,web"):
+        """Helper: call make_request with a mocked urlopen and return parsed body."""
+        mock_response = MagicMock()
+        mock_response.read.return_value = json.dumps({
+            "choices": [{"message": {"content": "no table"}}],
+            "usage": {}
+        }).encode("utf-8")
+
+        with patch("urllib.request.urlopen") as mock_urlopen:
+            mock_urlopen.return_value.__enter__.return_value = mock_response
+            with patch("urllib.request.Request") as mock_req:
+                # Let Request pass through to urlopen by returning a real-ish object
+                captured = {}
+
+                def capture_request(url, data=None, headers=None, method=None):
+                    captured["body"] = json.loads(data.decode("utf-8")) if data else {}
+                    real_req = MagicMock()
+                    real_req.data = data
+                    return real_req
+
+                mock_req.side_effect = capture_request
+                xai_harvest.make_request("test-key", "test theme", tools=tools)
+                return captured.get("body", {})
+
+    def test_payload_uses_input_not_messages(self):
+        """Request body must use 'input', not 'messages' (xAI Responses API schema)."""
+        with patch.dict(os.environ, {"XAI_API_KEY": "test-key"}):
+            with patch("urllib.request.urlopen") as mock_urlopen:
+                mock_response = MagicMock()
+                mock_response.read.return_value = json.dumps({
+                    "choices": [{"message": {"content": "no table"}}],
+                    "usage": {}
+                }).encode("utf-8")
+                mock_urlopen.return_value.__enter__.return_value = mock_response
+
+                with patch("urllib.request.Request") as mock_req:
+                    captured_body = {}
+
+                    def capture(url, data=None, headers=None, method=None):
+                        captured_body.update(json.loads(data.decode("utf-8")))
+                        obj = MagicMock()
+                        obj.data = data
+                        return obj
+
+                    mock_req.side_effect = capture
+                    xai_harvest.make_request("test-key", "test theme")
+
+                self.assertIn("input", captured_body,
+                              "Payload missing 'input' — xAI Responses API requires 'input', not 'messages'")
+                self.assertNotIn("messages", captured_body,
+                                 "Payload must not contain 'messages' — that is Chat Completions schema, not Responses API")
+
+    def test_payload_input_contains_user_prompt(self):
+        """input[0] must have role='user' and content matching the harvest prompt."""
+        with patch.dict(os.environ, {"XAI_API_KEY": "test-key"}):
+            with patch("urllib.request.urlopen") as mock_urlopen:
+                mock_response = MagicMock()
+                mock_response.read.return_value = json.dumps({
+                    "choices": [{"message": {"content": "no table"}}],
+                    "usage": {}
+                }).encode("utf-8")
+                mock_urlopen.return_value.__enter__.return_value = mock_response
+
+                with patch("urllib.request.Request") as mock_req:
+                    captured_body = {}
+
+                    def capture(url, data=None, headers=None, method=None):
+                        captured_body.update(json.loads(data.decode("utf-8")))
+                        obj = MagicMock()
+                        obj.data = data
+                        return obj
+
+                    mock_req.side_effect = capture
+                    theme = "AI data center power scarcity"
+                    xai_harvest.make_request("test-key", theme)
+
+                input_msgs = captured_body.get("input", [])
+                self.assertTrue(len(input_msgs) > 0, "input array must not be empty")
+                first = input_msgs[0]
+                self.assertEqual(first.get("role"), "user")
+                self.assertIn(theme, first.get("content", ""),
+                              "Theme must appear in the input content")
+
+    def test_payload_tools_present_alongside_input(self):
+        """tools field must be present when input is used."""
+        with patch.dict(os.environ, {"XAI_API_KEY": "test-key"}):
+            with patch("urllib.request.urlopen") as mock_urlopen:
+                mock_response = MagicMock()
+                mock_response.read.return_value = json.dumps({
+                    "choices": [{"message": {"content": "no table"}}],
+                    "usage": {}
+                }).encode("utf-8")
+                mock_urlopen.return_value.__enter__.return_value = mock_response
+
+                with patch("urllib.request.Request") as mock_req:
+                    captured_body = {}
+
+                    def capture(url, data=None, headers=None, method=None):
+                        captured_body.update(json.loads(data.decode("utf-8")))
+                        obj = MagicMock()
+                        obj.data = data
+                        return obj
+
+                    mock_req.side_effect = capture
+                    xai_harvest.make_request("test-key", "test theme", tools="x,web")
+
+                self.assertIn("tools", captured_body,
+                              "tools field must be present in request payload")
+                tool_types = [t.get("type") for t in captured_body.get("tools", [])]
+                self.assertIn("x_search", tool_types)
+                self.assertIn("web_search", tool_types)
+
+
+# ===========================================================================
 # Test 6: Cost conversion is correct
 # ===========================================================================
 

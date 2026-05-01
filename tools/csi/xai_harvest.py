@@ -197,13 +197,13 @@ def make_request(
 
     prompt = build_harvest_prompt(theme, max_sources)
 
-    # Build request body
+    # Build request body (xAI Responses API uses "input", not "messages")
     request_body = {
         "model": model,
-        "tools": tool_list,
-        "messages": [
+        "input": [
             {"role": "user", "content": prompt}
-        ]
+        ],
+        "tools": tool_list,
     }
 
     url = f"{XAI_BASE_URL}{XAI_RESPONSES_ENDPOINT}"
@@ -219,7 +219,8 @@ def make_request(
             headers=headers,
             method="POST"
         )
-        with urllib.request.urlopen(req, timeout=60) as response:
+        # 180s timeout: reasoning models with tool calls can take 2-3 minutes
+        with urllib.request.urlopen(req, timeout=180) as response:
             response_data = response.read().decode("utf-8")
             return json.loads(response_data), ""
     except urllib.error.HTTPError as e:
@@ -228,17 +229,24 @@ def make_request(
 
         if status == 401 or status == 403:
             return None, "Authentication failed. Check XAI_API_KEY."
+        elif status == 422:
+            return None, f"Request schema error (HTTP 422): {body[:300]}"
         elif status == 429:
             return None, "Rate limited. Wait and retry."
         elif status == 404:
             return None, "Model or endpoint not available."
         else:
-            return None, f"HTTP {status}: {body}"
+            return None, f"HTTP {status}: {body[:300]}"
     except urllib.error.URLError as e:
         return None, f"Network error: {e}"
     except json.JSONDecodeError:
         return None, "xAI response was not valid JSON."
+    except TimeoutError:
+        return None, "Request timed out after 180s. Reasoning models with tool calls can be slow — retry or try a faster model."
     except Exception as e:
+        # Catch socket.timeout which may surface as OSError on some platforms
+        if "timed out" in str(e).lower():
+            return None, "Request timed out after 180s. Reasoning models with tool calls can be slow — retry or try a faster model."
         return None, f"Unexpected error: {e}"
 
 
@@ -257,35 +265,60 @@ def extract_cost_usd(response: dict) -> float | None:
 
 def extract_markdown_table(response: dict) -> str | None:
     """
-    Extract markdown evidence table from response content.
+    Extract markdown evidence table from xAI Responses API response.
 
-    Grok should return the markdown table in response.choices[0].message.content
+    Tries multiple response shapes in order:
+    1. Responses API: output[0].content[0].text  (current xAI Responses API)
+    2. Responses API: output[0].content as string (alternate shape)
+    3. Chat Completions: choices[0].message.content (fallback, legacy)
+    4. Top-level output_text field
     """
-    try:
-        choices = response.get("choices", [])
-        if not choices:
+    def _extract_table(text: str) -> str | None:
+        """Find and return first markdown table block in text."""
+        if not text:
             return None
-        message = choices[0].get("message", {})
-        content = message.get("content", "")
-
-        if not content:
-            return None
-
-        # Look for markdown table in content
-        # Table starts with | and contains pipe-delimited columns
-        lines = content.split("\n")
+        lines = text.split("\n")
         table_lines = []
         in_table = False
-
         for line in lines:
             if line.strip().startswith("|"):
                 in_table = True
                 table_lines.append(line)
             elif in_table and not line.strip().startswith("|"):
                 break
+        return "\n".join(table_lines) if table_lines else None
 
-        if table_lines:
-            return "\n".join(table_lines)
+    try:
+        # 1. xAI Responses API: search output array for type=message item
+        # The message is the LAST item after tool calls — do not assume output[0]
+        output = response.get("output", [])
+        if output:
+            output_list = output if isinstance(output, list) else [output]
+            for item in output_list:
+                if item.get("type") == "message":
+                    content = item.get("content", [])
+                    if isinstance(content, list) and content:
+                        text = content[0].get("text", "")
+                        result = _extract_table(text)
+                        if result:
+                            return result
+                    elif isinstance(content, str):
+                        result = _extract_table(content)
+                        if result:
+                            return result
+
+        # 3. Chat Completions fallback: choices[0].message.content
+        choices = response.get("choices", [])
+        if choices:
+            message = choices[0].get("message", {})
+            result = _extract_table(message.get("content", ""))
+            if result:
+                return result
+
+        # 4. Top-level output_text
+        result = _extract_table(response.get("output_text", ""))
+        if result:
+            return result
 
         return None
     except (KeyError, IndexError, TypeError):
@@ -404,10 +437,15 @@ def harvest(
         lines.append(f"Error: {error}")
         return "\n".join(lines)
 
+    # Save raw response immediately — always, even if table extraction fails later
+    raw_response_path = save_raw_response(response, theme, "harvests/xai")
+    lines.append(f"Saved raw response to: {raw_response_path}")
+
     # Extract markdown table
     markdown_table = extract_markdown_table(response)
     if not markdown_table:
         lines.append("Error: xAI response did not contain a markdown evidence table.")
+        lines.append(f"Inspect the raw response at: {raw_response_path}")
         return "\n".join(lines)
 
     # Determine output path
@@ -422,10 +460,6 @@ def harvest(
         f.write(markdown_table + "\n")
 
     lines.append(f"Saved markdown evidence to: {output_path}")
-
-    # Save raw response
-    raw_response_path = save_raw_response(response, theme, "harvests/xai")
-    lines.append(f"Saved raw response to: {raw_response_path}")
 
     # Extract and log cost
     cost_usd = extract_cost_usd(response)
