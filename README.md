@@ -174,6 +174,40 @@ See [`tools/csi/README.md`](tools/csi/README.md) and
 
 ---
 
+## Optional: Personal xAI/Grok Harvest
+
+The reference implementation includes an **optional** xAI/Grok harvest adapter for users
+who want to accelerate evidence discovery using the Responses API.
+
+The public core remains fully usable without any paid API access. This adapter is optional.
+
+```bash
+export XAI_API_KEY="your_xai_api_key"
+
+# Basic harvest
+python tools/csi/csi.py harvest-xai "AI data center power scarcity"
+
+# Full pipeline (harvest → import → validate → score → report → observe)
+python tools/csi/csi.py harvest-xai "AI data center power scarcity" --auto-score
+
+# Convenience alias
+python tools/csi/csi.py oneclick "AI data center power scarcity"
+```
+
+The adapter:
+- Uses X Search and Web Search tools for evidence discovery
+- Distinguishes narrative velocity (X virality) from evidence quality
+- Outputs CSI-compatible markdown tables
+- Logs costs to `data/csi/xai_costs.jsonl`
+- Supports the full scoring and memory-flywheel pipeline
+- Preserves all non-advisory boundaries
+
+See [`docs/xai-harvest-adapter.md`](docs/xai-harvest-adapter.md),
+[`docs/search-handoff.md`](docs/search-handoff.md),
+and [`examples/xai-harvest-example.md`](examples/xai-harvest-example.md).
+
+---
+
 ## Memory Flywheel
 
 The reference implementation can store scored crowd-signal observations locally,

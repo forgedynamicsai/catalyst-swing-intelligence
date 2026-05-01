@@ -731,6 +731,33 @@ def main() -> None:
     p_wiz.add_argument("--data-dir", default="data/csi", help="Observations data directory")
     p_wiz.add_argument("--reports-dir", default="reports/csi", help="Reports directory")
 
+    # xAI harvest adapter (optional)
+    p_xai = sub.add_parser("harvest-xai", help="Harvest evidence from xAI/Grok (optional, requires XAI_API_KEY)")
+    p_xai.add_argument("theme", help="Market theme to harvest evidence for")
+    p_xai.add_argument("--output", default=None, help="Output markdown path (default: evidence/csi/{slug}-xai-evidence.md)")
+    p_xai.add_argument("--auto-score", action="store_true",
+                       help="Run full pipeline: import → validate → score → report → observe")
+    p_xai.add_argument("--runtime-tools", default="x,web",
+                       help="Search tools to use (default: x,web; options: x, web, x,web)")
+    p_xai.add_argument("--model", default="grok-3", help="xAI model (default: grok-3)")
+    p_xai.add_argument("--max-sources", type=int, default=20,
+                       help="Target number of sources (default: 20, hint only)")
+    p_xai.add_argument("--budget-usd", type=float, default=None,
+                       help="Optional budget warning (display-only, not enforced)")
+    p_xai.add_argument("--data-dir", default="data/csi", help="Data directory")
+    p_xai.add_argument("--reports-dir", default="reports/csi", help="Reports directory")
+
+    # Alias: oneclick (convenience shorthand for harvest-xai --auto-score)
+    p_oneclick = sub.add_parser("oneclick", help="Quick alias: harvest-xai --auto-score (provider: xai only)")
+    p_oneclick.add_argument("theme", help="Market theme to harvest evidence for")
+    p_oneclick.add_argument("--output", default=None, help="Output markdown path")
+    p_oneclick.add_argument("--runtime-tools", default="x,web", help="Search tools to use")
+    p_oneclick.add_argument("--model", default="grok-3", help="xAI model")
+    p_oneclick.add_argument("--max-sources", type=int, default=20, help="Target number of sources")
+    p_oneclick.add_argument("--budget-usd", type=float, default=None, help="Optional budget warning")
+    p_oneclick.add_argument("--data-dir", default="data/csi", help="Data directory")
+    p_oneclick.add_argument("--reports-dir", default="reports/csi", help="Reports directory")
+
     args = parser.parse_args()
 
     if args.command == "queries":
@@ -791,6 +818,34 @@ def main() -> None:
             data_dir=args.data_dir,
             reports_dir=args.reports_dir,
         )
+    elif args.command == "harvest-xai":
+        import xai_harvest as _xai
+        output = _xai.harvest(
+            theme=args.theme,
+            output_path=args.output,
+            auto_score=args.auto_score,
+            runtime_tools=args.runtime_tools,
+            model=args.model,
+            max_sources=args.max_sources,
+            budget_usd=args.budget_usd,
+            data_dir=args.data_dir,
+            reports_dir=args.reports_dir,
+        )
+        print(output)
+    elif args.command == "oneclick":
+        import xai_harvest as _xai
+        output = _xai.harvest(
+            theme=args.theme,
+            output_path=args.output,
+            auto_score=True,  # oneclick always auto-scores
+            runtime_tools=args.runtime_tools,
+            model=args.model,
+            max_sources=args.max_sources,
+            budget_usd=args.budget_usd,
+            data_dir=args.data_dir,
+            reports_dir=args.reports_dir,
+        )
+        print(output)
 
 
 if __name__ == "__main__":

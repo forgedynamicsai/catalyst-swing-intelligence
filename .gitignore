@@ -11,6 +11,11 @@ reports/csi/*.md
 reviews/csi/*.md
 playbooks/crowd-signal-playbook.md
 
+# xAI harvest adapter outputs
+evidence/csi/*.md
+evidence/csi/*.csv
+harvests/xai/*.json
+
 # Python cache
 __pycache__/
 *.pyc

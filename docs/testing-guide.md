@@ -211,13 +211,81 @@ Follow the prompts. Verify:
 
 ---
 
+## Test — xAI Harvest Adapter (Optional Module)
+
+Run these after any change to `tools/csi/xai_harvest.py` or `tools/csi/csi.py` harvest-xai/oneclick commands.
+
+### Automated Tests (All Mocked — No Real API Calls)
+
+```bash
+python -m pytest tests/test_csi_xai_harvest.py -v
+```
+
+Expected: 22 tests pass, 0 failures. All tests use mocks; no network requests made.
+
+### Manual Tests (Requires XAI_API_KEY — Skip in CI)
+
+These tests call the real xAI API. Only run if you have an API key and want to verify live behavior.
+
+```bash
+# Set your API key
+export XAI_API_KEY="xai_..."
+
+# Basic harvest (saves to evidence/csi/{slug}-xai-evidence.md)
+python tools/csi/csi.py harvest-xai "fictional test theme"
+
+# Full pipeline (harvest → import → validate → score → report → observe)
+python tools/csi/csi.py harvest-xai "fictional test theme" --auto-score
+
+# Check costs
+cat data/csi/xai_costs.jsonl | jq .
+
+# Check raw response
+cat harvests/xai/*.json | jq . | head -50
+```
+
+### Harvest Adapter Verification Checklist
+
+| Check | Expected |
+|---|---|
+| Missing `XAI_API_KEY` shows helpful message, no request sent | Always |
+| Harvest prompt includes all 14 CSI columns | Always |
+| Harvest prompt distinguishes X virality from evidence quality | Always |
+| Harvest prompt prohibits buy/sell/hold advice | Always |
+| Tool selection (x, web, x,web) maps correctly to request | Always |
+| Cost conversion formula: ticks / 10_000_000_000 = USD | Always |
+| Raw response JSON does NOT contain API key | Always |
+| Markdown table extracted and saved to evidence.md | Always |
+| `--auto-score` runs full pipeline (import → validate → score → report → observe) | Always |
+| Validation failure stops auto-score and prints error | Always |
+| HTTP 401 returns "Authentication failed" message | Always |
+| HTTP 429 returns "Rate limited" message | Always |
+| No output suggests buying, selling, or holding specific securities | Always |
+
+### Cost Tracking
+
+After harvest:
+
+```bash
+# Review cost log
+cat data/csi/xai_costs.jsonl | jq '.'
+
+# Verify structure
+cat data/csi/xai_costs.jsonl | jq '.[] | keys' | head
+```
+
+Each entry should have: `created_at`, `theme`, `model`, `tools`, `cost_usd`, `raw_response_path`, `evidence_md_path`.
+
+---
+
 ## Automated Test Suite
 
 ```bash
 python -m unittest discover -s tests
+python -m pytest tests/ -v
 ```
 
-Expected: 93+ tests pass, 0 failures.
+Expected: 156+ tests pass (134 original + 22 xAI harvest), 0 failures.
 
 ---
 
@@ -228,7 +296,8 @@ Expected: 93+ tests pass, 0 failures.
 | Edit `SKILL.md` | Manual skill tests (evaluation-tests.md) |
 | Edit `csi.py` | Automated + manual CLI smoke tests |
 | Edit `validation.py` / `importer.py` / `wizard.py` | v0.5 operability tests |
+| Edit `xai_harvest.py` or harvest-xai command | Automated xAI harvest tests (all mocked) |
 | Edit scoring constants | Automated tests + verify score range |
 | Edit sample_evidence.csv or .md | Import + report smoke test + private data audit |
 | Before commit | Full automated suite + private data audit |
-| Before PR | All of the above |
+| Before PR | All of the above + xAI harvest tests |
